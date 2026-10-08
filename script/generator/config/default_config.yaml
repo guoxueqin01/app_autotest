@@ -1,0 +1,21 @@
+# Scanner / analyzer configuration
+element_types:
+  button: [Button, Button2]
+  input: [EditText, TextField, TextInput]
+  checkbox: [CheckBox, Switch, Toggle]
+  radio: [RadioButton]
+  text: [TextView, StaticText, Text]
+  list: [RecyclerView, CollectionView, List, Table]
+  list_item: [ListItem, Cell, LinearLayout]
+  spinner: [Spinner, Picker, Select]
+  dialog: [FrameLayout, Window, Dialog]
+
+naming:
+  snake_case: true
+  prefix_with_type: true
+
+output:
+  page_dir: pages
+  model_dir: models
+  test_dir: testcases
+  data_dir: data

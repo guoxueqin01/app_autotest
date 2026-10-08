@@ -1,0 +1,26 @@
+cases:
+  - case: login_success
+    username: admin
+    password: admin123
+    remember: false
+    expected_methods:
+      - assert_method: visible
+        locator: 首页
+    expected_error: ""
+
+  - case: login_wrong_password
+    username: admin
+    password: wrong
+    remember: false
+    expected_methods: []
+    expected_error: 密码错误
+    alert_elem: error_msg
+
+  - case: login_remember_me
+    username: alice
+    password: alice123
+    remember: true
+    expected_methods:
+      - assert_method: visible
+        locator: 首页
+    expected_error: ""

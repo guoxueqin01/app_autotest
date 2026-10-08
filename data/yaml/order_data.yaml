@@ -1,0 +1,15 @@
+cases:
+  - case: order_list_empty
+    expected_rows: 0
+    keyword: ""
+    expected_status: ""
+
+  - case: order_list_with_items
+    expected_rows: 3
+    keyword: ""
+    expected_status: 待支付
+
+  - case: order_search
+    expected_rows: 1
+    keyword: 订单A
+    expected_status: 已完成

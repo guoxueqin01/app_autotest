@@ -1,0 +1,26 @@
+"""{{ class_name }}Data — auto-generated dataclass for `{{ module }}`.
+DO NOT EDIT BY HAND: regenerate with `python -m script.generator.cli generate-code --module {{ module }}`.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Any, Dict, List
+
+from models.base_models import AssertionRule
+
+
+@dataclass
+class {{ class_name }}Data:
+    """{{ class_name }} 测试数据模型。
+
+    cascade_fields (需 DataProvider 提供):
+        {% for cf in cascade_fields %}{{ cf }}, {% endfor %}
+    """
+
+    case: str = ""
+    steps: List[Dict[str, Any]] = field(default_factory=list)
+{% for el in elements %}
+    {{ el.field }}: Any = False if el.type in ['button', 'checkbox', 'switch', 'radio', 'dialog'] else ''  # {{ el.display_name }} ({{ el.type }})
+{% endfor %}
+    expected_methods: List[AssertionRule] = field(default_factory=list)
+    extra: Dict[str, Any] = field(default_factory=dict)

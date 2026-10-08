@@ -1,0 +1,36 @@
+# AtomX global config
+platform: android
+serial: ""
+package: com.example.app
+activity: .MainActivity
+wait_timeout: 10.0
+image_threshold: 0.7
+# 隐式等待: 元素查找失败时自动刷新 UI 树重试 N 次, 间隔 delay 秒
+implicit_retries: 3
+implicit_delay: 0.2
+
+allure: true
+allure_dir: allure-results
+
+plugins:
+  auto_screenshot:
+    enabled: true
+    on_step: false
+    on_failure: true
+  watcher:
+    enabled: false
+    interval: 2.0
+
+diagnostics:
+  failure_screenshot: true
+  failure_video: true
+  operation_trace: true
+
+logging:
+  level: INFO
+  dir: logs
+
+devices:
+  android: []
+  ios: []
+  harmony: []

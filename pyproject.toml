@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "atomx"
+version = "0.1.0"
+description = "AtomX — 跨平台 App 自动化测试框架"
+authors = ["AtomX Team"]
+packages = [{ include = "atomx" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+adbutils = "^2.0"
+lxml = "^5.0"
+requests = "^2.31"
+opencv-python = "^4.8"
+Pillow = "^10.0"
+pytesseract = "^0.3.10"
+Jinja2 = "^3.1"
+PyYAML = "^6.0"
+click = "^8.1"
+loguru = "^0.7"
+facebook-wda = "^1.0"
+tidevice = "^0.9"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-html = "^4.0"
+pytest-xdist = "^3.0"
+pytest-rerunfailures = "^14.0"
+allure-pytest = "^2.0"
+allure-python-commons = "^2.0"
+
+[tool.pytest.ini_config]
+testpaths = ["testcases"]

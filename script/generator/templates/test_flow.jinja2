@@ -1,0 +1,46 @@
+"""Test skeleton for `{{ module }}` — auto-generated.
+DO NOT EDIT BY HAND: regenerate with `python -m script.generator.cli generate-code --module {{ module }}`.
+
+目标平台: {{ platforms | join(', ') }}
+用例名: {{ case_name }}
+"""
+from __future__ import annotations
+
+import allure
+import pytest
+
+from {{ module }}_models import {{ class_name }}Data
+
+
+@allure.feature("{{ module }}")
+@allure.story("auto-generated")
+@pytest.mark.parametrize("platform", [{{ platforms_repr }}])
+def test_{{ module }}_{{ case_name }}(app, platform, data_provider):
+    """自动生成的 {{ module }} 冒烟用例。"""
+    with allure.step("1. 载入用例数据"):
+        case_data = data_provider.load("{{ module }}/{{ case_name }}")
+        if not case_data:
+            pytest.skip("no data for {{ module }}/{{ case_name }}")
+
+    page = app.page
+    with allure.step("2. 执行步骤"):
+        for step in case_data.get("steps", []):
+            action = step.get("action")
+            locator = step.get("locator")
+            value = step.get("value")
+            allure.attach(str(step), f"step: {action}", allure.attachment_type.TEXT)
+            if action == "tap":
+                page.tap(locator)
+            elif action == "input":
+                page.input_text(locator, value)
+            elif action == "check":
+                page.check(locator, bool(value))
+            elif action == "assert_exists":
+                assert page.is_displayed(locator), f"locator not found: {locator}"
+            elif action == "wait":
+                page.wait_for_visible(locator)
+            else:
+                pytest.fail(f"unsupported action in generated test: {action}")
+
+    with allure.step("3. 断言"):
+        assert True, "auto-generated skeleton — add real assertions"

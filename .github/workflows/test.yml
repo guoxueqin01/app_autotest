@@ -1,0 +1,59 @@
+name: AtomX App Automation Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  android-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        device: [emulator-5554]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install AtomX
+        run: |
+          pip install -r requirements.txt
+
+      - name: Setup Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          script: |
+            pytest testcases/ \
+              --platform android \
+              --alluredir=./allure-results \
+              --clean-alluredir \
+              --reruns=2 --reruns-delay=2
+
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          allure generate ./allure-results -o ./allure-report --clean
+          cp -r gh-pages/history ./allure-report/ 2>/dev/null || true
+          allure report add-history -o ./allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          keep_files: true

@@ -1,0 +1,105 @@
+"""{{ class_name }} — auto-generated Page Object for `{{ module }}`.
+DO NOT EDIT BY HAND: regenerate with `python -m script.generator.cli generate-code --module {{ module }}`.
+
+目标平台: {{ platforms | join(', ') }}
+"""
+from __future__ import annotations
+
+from typing import Any, Dict, List
+
+from pages.base_page import BasePage
+
+
+class {{ class_name }}(BasePage):
+    """{{ class_name }} — generated page object for `{{ module }}`."""
+
+    PACKAGE = "{{ package }}"
+    ACTIVITY = "{{ activity }}"
+    PLATFORMS = {{ platforms }}
+{% if semantic_methods %}
+    # ========== Locators ==========
+    # 每个 LOCATOR_* 是一个统一语义定位器 dict，运行时由 LocatorAdapter 翻译到平台 XPath。
+{% for el in elements %}
+    {{ el.field | upper }}: Dict[str, Any] = {{ el.locator_repr }}
+{% endfor %}
+
+    # ========== Locator Overrides ==========
+    # 平台级覆盖：locator_overrides["android"] / ["ios"] / ["harmony"]
+    LOCATOR_OVERRIDES: Dict[str, Dict[str, Dict[str, Any]]] = {
+{% for el in elements %}
+        "{{ el.field }}": {{ el.locator_overrides_repr }},
+{% endfor %}
+    }
+
+    # ========== Fallback Locators ==========
+    LOCATOR_FALLBACK: Dict[str, List[Dict[str, Any]]] = {
+{% for el in elements %}
+        "{{ el.field }}": {{ el.fallback_repr }},
+{% endfor %}
+    }
+{% endif %}
+
+    def wait_for_page_loaded(self) -> None:
+        self.wait_for_visible(self.{{ first_field | upper }})
+
+{% if semantic_methods %}
+    # ========== Semantic Methods ==========
+    # 按元素类型自动生成，测试用例直接调用，无需关心底层平台 API。
+{% for el in elements %}
+    def {{ action_for(el) }}_{{ el.field }}(self, value: Any = None, **kwargs: Any) -> Any:
+        """{{ action_for(el) }}: {{ el.display_name }} (type={{ el.type }}, confidence={{ el.confidence }})."""
+        locator = self._resolve_locator("{{ el.field }}")
+{% if el.type in ["input", "password_input"] %}
+        return self._act("{{ el.type }}", locator, value, **kwargs)
+{% elif el.type in ["checkbox", "switch", "radio"] %}
+        return self._act("{{ el.type }}", locator, value or True, **kwargs)
+{% elif el.type in ["button", "image", "list_item", "tab", "navigation_bar"] %}
+        return self._act("tap", locator, **kwargs)
+{% elif el.type in ["text", "label"] %}
+        return self._act("get_text", locator, **kwargs)
+{% else %}
+        return self._act("{{ el.type }}", locator, value, **kwargs)
+{% endif %}
+
+{% endfor %}
+
+    def _resolve_locator(self, field: str) -> Dict[str, Any]:
+        """按当前 platform 从 LOCATOR_OVERRIDES 里取出对应平台定位器；缺则回落主定位器。"""
+        overrides = self.LOCATOR_OVERRIDES.get(field, {})
+        platform = getattr(self, "platform", "android")
+        if platform in overrides:
+            return overrides[platform]
+        # 主定位器（首个元素常量）
+        upper = field.upper()
+        if hasattr(self, upper):
+            return getattr(self, upper)
+        return {}
+
+    def _act(self, action: str, locator: Dict[str, Any], value: Any = None, **kwargs: Any) -> Any:
+        """分发到 BasePage 底层原子操作。"""
+        if action == "tap":
+            return self.tap(locator, **kwargs)
+        if action == "input_text" or action == "input_password":
+            return self.input_text(locator, str(value or ""), **kwargs)
+        if action == "check":
+            return self.check(locator, bool(value), **kwargs)
+        if action == "get_text":
+            return self.get_text(locator, **kwargs)
+        if action == "scroll_to":
+            return self.scroll_to(locator, value, **kwargs)
+        if action == "scroll":
+            return self.scroll(locator, **kwargs)
+        if action == "wait_disappear":
+            return self.wait_for_disappear(locator, **kwargs)
+        if action == "set_slider":
+            return self.set_slider(locator, value, **kwargs)
+        if action == "select_item":
+            return self.select_item(locator, value, **kwargs)
+        if action == "select_date":
+            return self.select_date(locator, value, **kwargs)
+        if action == "dismiss":
+            return self.dismiss(locator, **kwargs)
+        if action == "is_displayed":
+            return self.is_displayed(locator, **kwargs)
+        raise NotImplementedError(f"unsupported action: {action}")
+{% endif %}

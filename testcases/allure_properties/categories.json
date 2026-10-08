@@ -1,0 +1,22 @@
+[
+  {
+    "name": "元素未找到",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*ElementNotFoundError.*"
+  },
+  {
+    "name": "断言失败",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*AssertionError.*"
+  },
+  {
+    "name": "设备连接问题",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*RuntimeError.*设备.*"
+  },
+  {
+    "name": "超时",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*Timeout.*"
+  }
+]

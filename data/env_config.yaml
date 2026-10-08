@@ -1,0 +1,11 @@
+staging:
+  platform: android
+  serial: ""
+  package: com.example.app.stg
+  activity: .MainActivity
+
+prod:
+  platform: android
+  serial: ""
+  package: com.example.app
+  activity: .MainActivity
